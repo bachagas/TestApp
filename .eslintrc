@@ -6,7 +6,10 @@
 
   "globals": {
     "angular": 1,
-    "commonjs" : 1
+    "commonjs": 1,
+    "should": 1,
+    "describe": 1,
+    "it": 1
   },
   
   "rules": {
@@ -21,6 +24,8 @@
     "padded-blocks": [1, "never"],
     "space-after-function-name": [1, "never"],
     "space-before-blocks": [1, "always"],
-    "no-mixed-spaces-and-tabs": [2, "smart-tabs"]
+    "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
+    "no-wrap-func": 0,
+    "no-unused-vars": [2, {"vars": "local", "args": "after-used"}]
   }
 }
