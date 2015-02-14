@@ -59,6 +59,31 @@ describe('My functions', function() {
 		it('should do a stable sort by more than one field in reverse order', function() {
 			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], true)).should.eql([c, b, d, e, a]); //"c", "b", "d", "e", "a"
 		});
+		it('can use different orders for different properties passed as an array of booleans', function() {
+			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [false, true, false]))
+				.should.eql([a, e, c, b, d]); //"a", "e", "c", "b", "d"
+			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [false, false, false]))
+				.should.eql([a, e, b, d, c]); //"a", "e", "b", "d", "c"
+			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [true, true, true]))
+				.should.eql([c, b, d, e, a]); //"c", "b", "d", "e", "a"
+			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [true, true, false]))
+				.should.eql([c, b, d, a, e]); //"c", "b", "d", "a", "e"
+			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [true, false, true]))
+				.should.eql([b, d, c, e, a]); //"b", "d", "c", "e", "a"
+		});
+		it('can use a single reverse flag for all properties passed as one single boolean', function() {
+			[a, b, c, d, e].sort(compareBy(['name', 'a', 'b', 'c'], true, [function(x) {return x;}]))
+				.should.eql([e, d, c, b, a]); //"e", "d", "c", "b", "a"
+		});
+		it('can use a single reverse flag for all properties passed as an a one element array', function() {
+			[a, b, c, d, e].sort(compareBy(['name', 'a', 'b', 'c'], [true], [function(x) {return x;}]))
+				.should.eql([e, d, c, b, a]); //"e", "d", "c", "b", "a"
+		});
+		it('should throw error if number of reverse flags is greater than 1 and differs from number of properties', function() {
+			(function() { //should be wraped inside a function to get the throw error
+				[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [true, false]));
+			}).should.throw();
+		});
 		it('can use primers functions', function() {
 			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], false, [function(x) {return -x;}, function(x) {return -x;}, function(x) {return -x;}]))
 				.should.eql([c, b, d, e, a]); //"c", "b", "d", "e", "a"

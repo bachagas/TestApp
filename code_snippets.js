@@ -49,15 +49,34 @@ function compareBy(_fields, _reverse, _primers) {
 		}
 	}
 
+	var reverse = [];
+	if (_reverse) {
+		if (_reverse.constructor === Array) {
+			if (_reverse.length === fieldsArray.length) {
+				reverse = _reverse;
+			} else if (_reverse.length === 1) { //replicates single value
+				fieldsArray.forEach(function() {
+					reverse.push(_reverse[0]);
+				});
+			} else {
+				throw new Error('compareBy(): reverse should be [boolean] of the same size of fields[] or one single boolean value.');
+			}
+		} else { //just a single value
+			fieldsArray.forEach(function() {
+				reverse.push(_reverse);
+			});
+		}
+	}
+
 	var keys = [];
 	fieldsArray.forEach(function(element, index) {
 		keys[index] = primersArray[index] ?
 						function(x) {return primersArray[index](x[element]);} :
 						(primersArray[0] ? function(x) {return primersArray[0](x[element]);} :
 											function(x) {return x[element];});
+		reverse[index] = [1, -1][+!!reverse[index]]; //forces to be -1 or 1: //[1, -1][+!!_reverse];
 	});
 
-	var reverse = [1, -1][+!!_reverse];
 	return function (a, b) {
 		function helper(_a, _b, _index) {
 			if (_index >= fieldsArray.length) {
@@ -67,7 +86,7 @@ function compareBy(_fields, _reverse, _primers) {
 				var valB = keys[_index](_b);
 				var temp = ((valA > valB) - (valB > valA));
 				if (temp !== 0) {
-					return reverse * temp;
+					return reverse[_index] * temp;
 				} else {
 					return helper(_a, _b, ++_index);
 				}
