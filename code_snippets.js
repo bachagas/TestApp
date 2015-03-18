@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 //"anti circular error" stringify:
 var cache = [];
 function safeStringify(key, value) {
@@ -84,7 +86,8 @@ function compareBy(_fields, _reverse, _primers) {
 			} else {
 				var valA = keys[_index](_a);
 				var valB = keys[_index](_b);
-				var temp = ((valA > valB) - (valB > valA));
+				//var temp = ((valA > valB) - (valB > valA));
+				var temp = (valA) ? ( valB ? ((valA > valB) - (valB > valA)) : 1 ) : (valB ? -1 : 0);
 				if (temp !== 0) {
 					return reverse[_index] * temp;
 				} else {
@@ -96,3 +99,74 @@ function compareBy(_fields, _reverse, _primers) {
 	};
 }
 exports.compareBy = compareBy;
+
+/**
+*
+*  Javascript string pad
+*  http://www.webtoolkit.info/
+*
+**/
+// took from: http://stackoverflow.com/questions/2686855/is-there-a-javascript-function-that-can-pad-a-string-to-get-to-a-determined-leng
+var STR_PAD_RIGHT = 1;
+var STR_PAD_LEFT = 2;
+var STR_PAD_BOTH = 3;
+
+function pad(_len, _char, _dir) {
+	var str = this;
+	if (typeof _len == 'undefined') { _len = 0; }
+	if (typeof _char == 'undefined') { _char = ' '; }
+	if (typeof _dir == 'undefined') {
+		_dir = STR_PAD_RIGHT;
+    } else {
+		if (_.isNumber(_dir) && ( _dir < 1 || _dir > 3)) {
+			_dir = STR_PAD_RIGHT;
+		} else if (_.isString(_dir)) {
+			switch (_dir.toUpperCase()) {
+				case 'CENTER':
+				case 'BOTH':
+					_dir = STR_PAD_BOTH;
+					break;
+				case 'LEFT':
+					_dir = STR_PAD_LEFT;
+					break;
+				case 'RIGHT':
+				default:
+					_dir = STR_PAD_RIGHT;
+					break;
+			}
+		}
+	}
+	var padLen;
+    if (_len + 1 >= str.length) {
+        switch (_dir) {
+            case STR_PAD_LEFT:
+                str = Array(_len + 1 - str.length).join(_char) + str;
+                break;
+            case STR_PAD_BOTH:
+                var right = Math.ceil((padLen = _len - str.length) / 2);
+                var left = padLen - right;
+                str = Array(left + 1).join(_char) + str + Array(right + 1).join(_char);
+                break;
+            default:
+                str = str + Array(_len + 1 - str.length).join(_char);
+                break;
+        } // switch
+    }
+    return str;
+}
+String.prototype.pad = pad;
+
+function toFileNameFormat() {
+	/*return this.toISOString().			//ex: 2015-01-14T18:33:35.029Z
+				replace(/-/g, '').		// replace all - with nothing
+				replace(/:/g, '').		// replace all : with nothing
+				replace(/T/, '_').		// replace T with a _
+				replace(/\..+/, '');	// delete the dot and everything after*/
+	return this.getFullYear().toString().pad(4, '0', 'left') +
+			this.getMonth().toString().pad(2, '0', 'left') +
+			this.getDay().toString().pad(2, '0', 'left') + '_' +
+			this.getHours().toString().pad(2, '0', 'left') +
+			this.getMinutes().toString().pad(2, '0', 'left') +
+			this.getSeconds().toString().pad(2, '0', 'left');
+}
+Date.prototype.toFileNameFormat = toFileNameFormat;

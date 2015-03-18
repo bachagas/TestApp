@@ -19,6 +19,7 @@ var b = {name: 'b', a: 2, b: 1, c: 1};
 var c = {name: 'c', a: 2, b: 2, c: 1};
 var d = {name: 'd', a: 2, b: 1, c: 1};
 var e = {name: 'e', a: 1, b: 1, c: 2};
+var u = {name: undefined, a: undefined, b: undefined};
 
 describe('My functions', function() {
 	describe('#compareBy()', function() {
@@ -26,20 +27,44 @@ describe('My functions', function() {
 			util.compareBy.should.be.type('function');
 		});
 
-		it('f(a,b) should return < 0 if a < b', function() {
+		it('f(a,b) should return < 0 when a < b', function() {
 			compareBy(['a', 'b', 'c'])(a, b).should.lessThan(0);
 		});
-		it('f(b,a) should return > 0 if b > a', function() {
+		it('f(b,a) should return > 0 when b > a', function() {
 			compareBy(['a', 'b', 'c'])(b, a).should.greaterThan(0);
 		});
-		it('f(a,a) should return 0', function() {
+		it('f(x,x) should return 0 for any x', function() {
 			compareBy(['a', 'b', 'c'])(a, a).should.equal(0);
+			compareBy(['a', 'b', 'c'])(b, b).should.equal(0);
+			compareBy(['a', 'b', 'c'])(c, c).should.equal(0);
+			compareBy(['a', 'b', 'c'])(d, d).should.equal(0);
+			compareBy(['a', 'b', 'c'])(e, e).should.equal(0);
 		});
-		it('f(e,b) should return < 0 if e < b', function() {
+		it('f(e,b) should return < 0 when e < b', function() {
 			compareBy(['a', 'b', 'c'])(e, b).should.lessThan(0);
 		});
 		it('f(e,b) should return > 0 when compared by last attribute (e > b)', function() {
 			compareBy(['c', 'b', 'a'])(e, b).should.greaterThan(0);
+		});
+		it('f(u,x) should return < 0 when u is undefined, for any x', function() {
+			compareBy(['name', 'a', 'b', 'c'])(u, a).should.lessThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(u, b).should.lessThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(u, c).should.lessThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(u, d).should.lessThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(u, e).should.lessThan(0);
+			compareBy(['c'])(u, a).should.lessThan(0);
+		});
+		it('f(x,u) should return > 0 when u is undefined, for any x', function() {
+			compareBy(['name', 'a', 'b', 'c'])(a, u).should.greaterThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(b, u).should.greaterThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(c, u).should.greaterThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(d, u).should.greaterThan(0);
+			compareBy(['name', 'a', 'b', 'c'])(e, u).should.greaterThan(0);
+			compareBy(['c'])(a, u).should.greaterThan(0);
+		});
+		it('f(u,u) should return 0 when u is undefined, for any x', function() {
+			compareBy(['name', 'a', 'b', 'c'])(u, u).should.equal(0);
+			compareBy(['property does not exist'])(a, a).should.equal(0);
 		});
 	});
 
