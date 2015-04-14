@@ -78,11 +78,24 @@ describe('My functions', function() {
 		it('should do a basic sort by more than one field', function() {
 			[c, b, a].sort(compareBy(['a', 'b', 'c'])).should.eql([a, b, c]);      //"a", "e", "b", "d", "c"
 		});
+		it('should do a stable sort (preserves original order)', function() {
+			[a, b, c, d, e].sort(compareBy('a')).should.eql([a, e, b, c, d]);      //"a", "e", "b", "c", "d"
+		});
 		it('should do a stable sort by more than one field (preserves original order)', function() {
 			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'])).should.eql([a, e, b, d, c]);      //"a", "e", "b", "d", "c"
 		});
 		it('should do a stable sort by more than one field in reverse order', function() {
 			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], true)).should.eql([c, b, d, e, a]); //"c", "b", "d", "e", "a"
+		});
+		it('should do a stable sort even when using functions primers', function() {
+			[a, b, c, d, e].sort(compareBy(['a'], [false], [function(x) {return x;}])).should.eql([a, e, b, c, d]); //"a", "e", "b", "c", "d"
+			[a, b, c, d, e].sort(compareBy(['a'], [false], [function(x) {return -x;}])).should.eql([b, c, d, a, e]);
+			[a, b, c, d, e].sort(compareBy(['a'], [true], [function(x) {return -x;}])).should.eql([a, e, b, c, d]); //"a", "e", "b", "c", "d"
+		});
+		it('should do a stable sort even when some field is undefined', function() {
+			[a, b, c, d, e, u].sort(compareBy(['a'], [false], [function(x) {return x;}])).should.eql([u, a, e, b, c, d]);
+			[a, b, u, c, d, e].sort(compareBy(['a'], [false], [function(x) {return -x;}])).should.eql([u, b, c, d, a, e]);
+			[a, b, c, u, d, e].sort(compareBy(['a'], [true], [function(x) {return -x;}])).should.eql([a, e, b, c, d, u]); //"a", "e", "b", "c", "d"
 		});
 		it('can use different orders for different properties passed as an array of booleans', function() {
 			[a, b, c, d, e].sort(compareBy(['a', 'b', 'c'], [false, true, false]))
