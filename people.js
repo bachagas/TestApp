@@ -24,22 +24,22 @@ function Person(first, last, age, eyecolor) {
 module.exports = Person;
 
 //exports.Person.prototype.nationality = 'English';
-Person.prototype.nationality = 'English';
+Person.prototype.nationality = 'English'; // like a default nationality
 //module.exports.prototype.nationality = 'English';
 
-//exports.Person.prototype.name = function() {
 Person.prototype.fullDescription = function() {
-//module.exports.prototype.name = function() {
 	var text = '';
-	var i = 0;
-	for (var prop in this) {
-		if (!_.isFunction(this[prop])) {
-			if (this[prop]) {
-				if (i++ !== 0) { text += ', '; }
-				text += (this[prop] ? this[prop] : '');
-			}
-		}
-	}
+    var i = 0;
+    _.keysIn(this).forEach(_.bind(function (prop) {
+        if (!_.isFunction(this[prop])) {
+            if (!!this[prop]) {
+                if (i++ !== 0) {
+                    text += ', ';
+                }
+                text += (this[prop] ? this[prop] : '');
+            }
+        }
+    }, this));
 	return text;
  };
 
@@ -48,14 +48,23 @@ Person.prototype.fullDescription = function() {
 // module.exports.prototype.Brasileiro = function() {
 // 	this.nationality = 'Brazilian';
 // };
-function Brasileiro() {
-//function Brasileiro(first, last, age, eyecolor) {
+
+function English(first, last, age, eyecolor) {
+    //this.prototype = new Person(first, last, age, eyecolor);
+    //this.prototype = new Person();
+    _.merge(this, new Person(first, last, age, eyecolor));  //Chama o construtor da classe pai para setar os atributos do Brasileiro --> TODO: É a melhor ou a maneira correta de fazer isso?
+}
+
+//English.prototype = Person.prototype;
+
+function Brasileiro(first, last, age, eyecolor) {
 	//this.prototype = new Person(first, last, age, eyecolor);
 	//this.prototype = new Person();
+    _.merge(this, new Person(first, last, age, eyecolor));  //Chama o construtor da classe pai para setar os atributos do Brasileiro --> TODO: É a melhor ou a maneira correta de fazer isso?
 	this.nationality = 'Brazilian';
 }
 //exports.Brasileiro = Brasileiro;
-Brasileiro.prototype = new Person();
+//Brasileiro.prototype = new Person();
 // Brasileiro.prototype.nationality = 'Brazilian';
 
 console.log('\n*****');
@@ -68,8 +77,17 @@ console.log(john.nationality);
 console.log(john.fullDescription());
 
 console.log('\n*****');
-console.log('Testando classe Brasileiro:');
-var joao = new Brasileiro(); //TODO: Chamar o construtor da classe pai de alguma maneira para setar os atributos
+console.log('Testando classe English que herda de Person:');
+var john = new English('John', 'the English');
+//var john = new module.exports('John');
+console.log(john);
+console.log(john.name());
+console.log(john.nationality);
+console.log(john.fullDescription());
+
+console.log('\n*****');
+console.log('Testando classe Brasileiro que herda de Person:');
+var joao = new Brasileiro('João');
 //joao.Person('Joao');
 //joao.Brasileiro();
 console.log(joao);

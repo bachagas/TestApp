@@ -1,0 +1,33 @@
+{
+  "name": "testapp",
+  "version": "0.0.0",
+  "description": "Some test scripts playing around with Javascript and Node.js",
+  "main": "people.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "lodash": "latest"
+  },
+  "devDependencies": {
+    "should": "latest"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bachagas/TestApp.git"
+  },
+  "keywords": [
+    "test",
+    "javascript",
+    "nodejs"
+  ],
+  "author": "Bruno Azevedo Chagas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bachagas/TestApp/issues"
+  },
+  "homepage": "https://github.com/bachagas/TestApp#readme"
+}
