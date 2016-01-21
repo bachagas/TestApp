@@ -16,7 +16,7 @@ function Person(first, last, age, eyecolor) {
     this.eyeColor = eyecolor;
     //return this;
     //this.nationality = 'English';
-    this.name = function() {
+    this.name = function () {
 		return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
 	};
 }
@@ -27,7 +27,7 @@ module.exports = Person;
 Person.prototype.nationality = 'English'; // like a default nationality
 //module.exports.prototype.nationality = 'English';
 
-Person.prototype.fullDescription = function() {
+Person.prototype.fullDescription = function () {
 	var text = '';
     var i = 0;
     _.keysIn(this).forEach(_.bind(function (prop) {

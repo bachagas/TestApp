@@ -22,7 +22,7 @@
     "eol-last": 0,
     "no-nested-ternary": 0,
     "padded-blocks": [1, "never"],
-    "space-after-function-name": [1, "never"],
+    "space-before-function-paren": [2, { "anonymous": "always", "named": "never" }],
     "space-before-blocks": [1, "always"],
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
     "no-wrap-func": 0,
