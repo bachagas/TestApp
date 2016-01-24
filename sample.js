@@ -16,8 +16,10 @@ console.log([1,2,3].flatten());
 console.log([[1],2,3].flatten());
 console.log([[1,2,3]].flatten());
 console.log([[1,2,[3]]].flatten());
-console.log([[1,2,[3, [4,5]]]].flatten(true));
+console.log([[1,2,[3]]].flatten(true));
 console.log([[1,2,[3, [4,5]]]].flatten());
+console.log([1,2,[3, [4,5]]].flatten());
+console.log([[1,2,[3, [4,5]]]].flatten(true));
 
 // Warn if overriding existing method
 if (!!Array.prototype.humanizedJoin) {
