@@ -18,8 +18,8 @@ exports.safeStringify = safeStringify;
 //Reusable compare function to sort objects by any field - to be used with Array.sort(compareFunction):
 function compareByField(field, reverse, primer) {
    var key = primer ?
-				function(x) {return primer(x[field]);} :
-				function(x) {return x[field];};
+				function (x) {return primer(x[field]);} :
+				function (x) {return x[field];};
 
    reverse = [1, -1][+!!reverse];
 
@@ -57,25 +57,25 @@ function compareBy(_fields, _reverse, _primers) {
 			if (_reverse.length === fieldsArray.length) {
 				reverse = _reverse;
 			} else if (_reverse.length === 1) { //replicates single value
-				fieldsArray.forEach(function() {
+				fieldsArray.forEach(function () {
 					reverse.push(_reverse[0]);
 				});
 			} else {
 				throw new Error('compareBy(): reverse should be [boolean] of the same size of fields[] or one single boolean value.');
 			}
 		} else { //just a single value
-			fieldsArray.forEach(function() {
+			fieldsArray.forEach(function () {
 				reverse.push(_reverse);
 			});
 		}
 	}
 
 	var keys = [];
-	fieldsArray.forEach(function(element, index) {
+	fieldsArray.forEach(function (element, index) {
 		keys[index] = primersArray[index] ?
-						function(x) {return primersArray[index](x[element]);} :
-						(primersArray[0] ? function(x) {return primersArray[0](x[element]);} :
-											function(x) {return x[element];});
+						function (x) {return primersArray[index](x[element]);} :
+						(primersArray[0] ? function (x) {return primersArray[0](x[element]);} :
+											function (x) {return x[element];});
 		reverse[index] = [1, -1][+!!reverse[index]]; //forces to be -1 or 1: //[1, -1][+!!_reverse];
 	});
 
@@ -170,3 +170,66 @@ function toFileNameFormat() {
 			this.getSeconds().toString().pad(2, '0', 'left');
 }
 Date.prototype.toFileNameFormat = toFileNameFormat;
+
+//Add utility functions to Array objects
+// Warn if overriding existing method
+if (!!Array.prototype.equals) {
+	console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+}
+
+// attach the .equals method to Array's prototype to call it on any array
+Array.prototype.equals = function (array1, array2) {
+	// if the other array is a falsy value, return
+	if (!array1 || !array2)
+		return false;
+
+	// compare lengths - can save a lot of time
+	if (array1.length != array2.length)
+		return false;
+
+	for (var i = 0, l=array1.length; i < l; i++) {
+		// Check if we have nested arrays
+		if (array1[i] instanceof Array && array2[i] instanceof Array) {
+			// recurse into the nested arrays
+			if (!_.arrayEquals(array1[i], array2[i]))
+				return false;
+		} else if (array1[i] != array2[i]) {
+			// Warning - two different object instances will never be equal: {x:20} != {x:20}
+			return false;
+		}
+	}
+	return true;
+}
+
+// Warn if overriding existing method
+if (!!Array.prototype.flatten) {
+	console.warn("Overriding existing Array.prototype.flatten. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+}
+
+// attach the .flatten method to Array's prototype to call it on any array
+Array.prototype.flatten = function (deep) {
+	return this.reduce(function (acc, elem) {
+		if (deep && elem instanceof Array) return acc.concat(elem.flatten(deep));
+		else return acc.concat(elem);
+	}, []);
+}
+
+// Warn if overriding existing method
+if (!!Array.prototype.humanizedJoin) {
+	console.warn("Overriding existing Array.prototype.humanizedJoin. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+}
+
+// attach the .humanizedJoin method to Array's prototype to call it on any array
+Array.prototype.humanizedJoin = function (separator, beforeLast, afterFirst) {
+	if (arguments.length < 2) return this.join(separator); //return standard Array.join result
+	beforeLast = beforeLast || separator;
+	afterFirst = afterFirst || separator;
+
+	return this.flatten(true).reduce(function (acc, elem, index, array) {
+		var sep = separator;
+		if (index == 0) sep = '';
+		if (index == 1) sep = afterFirst;
+		if (index == array.length - 1) sep = beforeLast;
+		return acc + sep + elem;
+	}, '');
+}
