@@ -221,15 +221,15 @@ if (!!Array.prototype.humanizedJoin) {
 
 // attach the .humanizedJoin method to Array's prototype to call it on any array
 Array.prototype.humanizedJoin = function (separator, beforeLast, afterFirst) {
-	if (arguments.length < 2) return this.join(separator); //return standard Array.join result
+	if (arguments.length < 2) return this.flatten(true).join(separator); //return standard Array.join result
 	beforeLast = beforeLast || separator;
 	afterFirst = afterFirst || separator;
 
 	return this.flatten(true).reduce(function (acc, elem, index, array) {
 		var sep = separator;
-		if (index == 0) sep = '';
 		if (index == 1) sep = afterFirst;
 		if (index == array.length - 1) sep = beforeLast;
+		if (index == 0) sep = '';
 		return acc + sep + elem;
 	}, '');
 }

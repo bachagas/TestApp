@@ -183,8 +183,20 @@ describe('My functions', function () {
 		it('should return an "and" after the first and before the last element', function () {
 			[1,2,3,4].humanizedJoin(', ', ' and ', ' and ').should.eql('1 and 2, 3 and 4');
 		});
+		it('should return empty string if the array is empty', function () {
+			[].humanizedJoin(', ').should.eql('');
+			[].humanizedJoin(', ', ' and ').should.eql('');
+			[].humanizedJoin(', ', undefined, ' and ').should.eql('');
+			[].humanizedJoin(', ', ' and ', ' and ').should.eql('');
+		});
+		it('should return the element if array has only one element', function () {
+			[0].humanizedJoin(', ').should.eql('0');
+			[1].humanizedJoin(', ', ' and ').should.eql('1');
+			[2].humanizedJoin(', ', undefined, ' and ').should.eql('2');
+			[3].humanizedJoin(', ', ' and ', ' and ').should.eql('3');
+		});
 		it('should return standard join (with nested arrays)', function () {
-			[1,2,3].humanizedJoin(', ').should.eql('1, 2, 3');
+			[1,[2,[3]]].humanizedJoin(', ').should.eql('1, 2, 3');
 		});
 		it('should return an "and" before the last element (with nested arrays)', function () {
 			[1,2,[3,4]].humanizedJoin(', ', ' and ').should.eql('1, 2, 3 and 4');
