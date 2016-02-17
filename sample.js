@@ -44,6 +44,7 @@ Array.prototype.humanizedJoin = function (separator, beforeLast, afterFirst) {
 console.log();
 console.log('Array.prototype.humanizedJoin(separator, beforeLast, afterFirst):');
 console.log('A more humanized join() function for Javascript Arrays:');
+console.log('[1].humanizedJoin(\', \', \' and \') =', [1].humanizedJoin(', ', ' and '));
 console.log('[1,2,3].humanizedJoin(\', \', \' and \') =', [1,2,3].humanizedJoin(', ', ' and '));
 console.log('[1,2,3].humanizedJoin(\', \', undefined, \' and \') =', [1,2,3].humanizedJoin(', ', undefined, ' and '), '- works with the first element too');
 console.log('[1,2,3].humanizedJoin(\', \', \' and \', \' and \') =', [1,2,3].humanizedJoin(', ', ' and ', ' and '), '- or with both first and last elements');
